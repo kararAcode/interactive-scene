@@ -5,34 +5,31 @@ const PLAYERSTATE = {
     ATTACK1: 2,
     ATTACK2: 3,
     TAKEHIT: 4,
-    JUMP: 5,
-    DEATH: 6
+    DEATH: 5,
 };
 
 class FighterSprite {
     constructor(playerName) {
         this.playerName = playerName;
-        this.position;
+        this.position = {x : 50, y:50};
         this.runningSpeed;
         this.health = 100;
         this.state = PLAYERSTATE.IDLE;
         this.reversed;
+        this.img;
+        
+        this.spriteData = spritesheetData[this.playerName]
+        this.animations = []
 
         
-        let data = fetch("./scripts/animations.json")
-                        .then((response) => response.json())
-                        .then((json) => {
-                            return json[this.playerName];
-                        });
-                        
-        this.spriteData
     }
 
-    setup() {
-
-                     
+    init() {
+        for (let i = 0; i < this.spriteData.length; i++) {
+            let img = loadImage(this.spriteData[i]["spritesheet"])
+            this.animations.push(img);
+        }
                 
-
     }
 
     moveForward() {
@@ -46,45 +43,20 @@ class FighterSprite {
     }
 
     attack1() {
+        this.state = PLAYERSTATE.ATTACK1;
 
     }
 
     attack2() {
+        this.state = PLAYERSTATE.ATTACK2;
 
     }
 
     draw() {
-        let spriteSheetUrl = this.spriteData[this.state]["spritesheet"];
-        let frames = this.spriteData[this.state]["frames"];
+       this.animations[this.state].play();
 
-        let animation = [];
-
-        let img = loadImage(spriteSheetUrl);
-        let imgHeight = img.height;
-        let imgWidth = img.width;
-
-        let frameWidth = imgWidth/frames;
-
-
-
-        for (let i = 0; i < frames; i++) {
-            let frame = img.get(i*frameWidth, 0, frameWidth, imgHeight);
-            animation.push(frame);
-        }
-
-        let sprite = createSprite(this.position.x, this.position.y);
-        sprite.addAnimation('', animation);
-
-        drawSprites();
+       image(this.animations[this.state], this.position.x, this.position.y);
+    }
 
     
-    }
-
-    async fetchData(){
-        let response = await fetch('./scripts/animations.json');
-        let data = await response.json();
-        data = JSON.stringify(data);
-        data = JSON.parse(data);
-        return data;
-    }
 }

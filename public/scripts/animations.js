@@ -1,31 +1,31 @@
-{
+let spritesheetData = {
     "Martial Hero": [
         {
-            "spritesheet": "/assets/Martial Hero/Sprites/Idle.png",
+            "spritesheet": "/assets/Martial Hero/Sprites/idle.gif",
             "frames": 8,
             "fps": 8
         },
         
         {
-            "spritesheet":"/assets/Martial Hero/Sprites/Attack1.png",
+            "spritesheet":"/assets/Martial Hero/Sprites/attack1.gif",
+            "frames": 6,
+            "fps": 6
+        },
+    
+        {
+            "spritesheet":"/assets/Martial Hero/Sprites/attack2.gif",
             "frames": 6,
             "fps": 6
         },
 
         {
-            "spritesheet":"/assets/Martial Hero/Sprites/Attack2.png",
-            "frames": 6,
-            "fps": 6
-        },
-
-        {
-            "spritesheet":"/assets/Martial Hero/Sprites/Run.png",
+            "spritesheet":"/assets/Martial Hero/Sprites/run.gif",
             "frames": 8,
             "fps": 8
         },
 
         {
-            "spritesheet":"/assets/Martial Hero/Sprites/Take Hit - white silhouette.png",
+            "spritesheet":"/assets/Martial Hero/Sprites/takehit.gif",
             "frames": 4,
             "fps": 4
         }
@@ -34,31 +34,31 @@
 
     "Martial Hero 2": [
         {
-            "spritesheet": "/assets/Martial Hero 2/Sprites/Idle.png",
+            "spritesheet": "/assets/Martial Hero 2/Sprites/Idle.gif",
             "frames": 4,
             "fps": 4
         },
         
         {
-            "spritesheet":"/assets/Martial Hero 2/Sprites/Attack1.png",
+            "spritesheet":"/assets/Martial Hero 2/Sprites/Attack1.gif",
+            "frames": 4,
+            "fps": 4
+        },
+    
+        {
+            "spritesheet":"/assets/Martial Hero 2/Sprites/Attack2.gif",
             "frames": 4,
             "fps": 4
         },
 
         {
-            "spritesheet":"/assets/Martial Hero 2/Sprites/Attack2.png",
-            "frames": 4,
-            "fps": 4
-        },
-
-        {
-            "spritesheet":"/assets/Martial Hero 2/Sprites/Run.png",
+            "spritesheet":"/assets/Martial Hero 2/Sprites/Run.gif",
             "frames": 8,
             "fps": 8
         },
 
         {
-            "spritesheet":"/assets/Martial Hero 2/Sprites/Take Hit",
+            "spritesheet":"/assets/Martial Hero 2/Sprites/takehit.gif",
             "frames": 4,
             "fps": 4
         }
@@ -77,7 +77,7 @@
             "frames": 7,
             "fps": 7
         },
-
+    
         {
             "spritesheet":"/assets/Martial Hero 3/Sprites/Attack2.png",
             "frames": 6,
@@ -110,7 +110,7 @@
             "frames": 8,
             "fps": 8
         },
-
+    
         {
             "spritesheet":"/assets/Wizard Pack/Sprites/Attack2.png",
             "frames": 8,
@@ -143,7 +143,7 @@
             "frames": 4,
             "fps": 4
         },
-
+    
         {
             "spritesheet":"/assets/Medieval Warrior Pack/Sprites/Attack2.png",
             "frames": 4,
@@ -163,4 +163,7 @@
         }
 
     ]
+
 }
+
+
