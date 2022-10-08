@@ -19,21 +19,22 @@ function preload() {
 
 
 function setup() {
-    createCanvas(800, 600);
+    createCanvas(windowWidth, windowHeight);
 }
 
 
 
 function draw() {
 
+
     background(bg);
 
+    new InputHandler(fighter1);
     fighter1.draw();
 
 
 
 }
-
 
 
 

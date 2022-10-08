@@ -100,31 +100,31 @@ let spritesheetData = {
 
     "Wizard Pack": [
         {
-            "spritesheet": "/assets/Wizard Pack/Sprites/Idle.png",
+            "spritesheet": "/assets/Wizard Pack/Sprites/idle.gif",
             "frames": 6,
             "fps": 6
         },
         
         {
-            "spritesheet":"/assets/Wizard Pack/Sprites/Attack1.png",
+            "spritesheet":"/assets/Wizard Pack/Sprites/attack1.gif",
             "frames": 8,
             "fps": 8
         },
     
         {
-            "spritesheet":"/assets/Wizard Pack/Sprites/Attack2.png",
+            "spritesheet":"/assets/Wizard Pack/Sprites/attack2.gif",
             "frames": 8,
             "fps": 8
         },
 
         {
-            "spritesheet":"/assets/Wizard Pack/Sprites/Run.png",
+            "spritesheet":"/assets/Wizard Pack/Sprites/run.gif",
             "frames": 8,
             "fps": 8
         },
 
         {
-            "spritesheet":"/assets/Wizard Pack/Sprites/Take Hit.png",
+            "spritesheet":"/assets/Wizard Pack/Sprites/takehit.gif",
             "frames": 4,
             "fps": 4
         }

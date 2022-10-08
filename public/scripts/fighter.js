@@ -1,25 +1,22 @@
 
 const PLAYERSTATE = {
     IDLE: 0,
-    RUN: 1,
-    ATTACK1: 2,
-    ATTACK2: 3,
-    TAKEHIT: 4,
-    DEATH: 5,
+    ATTACK1: 1,
+    ATTACK2: 2,
+    RUN: 3,
+    TAKEHIT: 4
 };
 
 class FighterSprite {
     constructor(playerName) {
         this.playerName = playerName;
-        this.position = {x : 50, y:50};
-        this.runningSpeed;
+        this.position = {x : 50, y:windowHeight*0.75};
+        this.runningSpeed = 4;
         this.health = 100;
         this.state = PLAYERSTATE.IDLE;
         this.reversed;
-        this.img;
-        
-        this.spriteData = spritesheetData[this.playerName]
-        this.animations = []
+        this.spriteData = spritesheetData[this.playerName];
+        this.animations = [];
 
         
     }
@@ -33,13 +30,21 @@ class FighterSprite {
     }
 
     moveForward() {
-        this.state = PLAYERSTATE.RUN;
         this.position.x += this.runningSpeed
+        this.state = PLAYERSTATE.RUN;
+
+        this.reversed = false;
+
+        
     }
 
     moveBackward() {
-        this.state = PLAYERSTATE.RUN;
         this.position.x -= this.runningSpeed
+        this.state = PLAYERSTATE.RUN;
+
+        this.reversed = true;
+
+        
     }
 
     attack1() {
@@ -53,9 +58,25 @@ class FighterSprite {
     }
 
     draw() {
+        
+       
+       
        this.animations[this.state].play();
 
-       image(this.animations[this.state], this.position.x, this.position.y);
+       if (this.reversed) {
+            push()
+            scale(-1, 1);
+            image(this.animations[this.state], -this.position.x-200, this.position.y);
+            pop()
+        }
+
+        else {
+            image(this.animations[this.state], this.position.x, this.position.y);
+        }
+
+
+
+       this.state = PLAYERSTATE.IDLE;
     }
 
     
