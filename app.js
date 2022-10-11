@@ -57,7 +57,7 @@ wss.on("connection", (socket) => {
 
 });
 
-const server = app.listen(8080)
+const server = app.listen(process.env.PORT || 8080)
 server.on('upgrade', (request, socket, head) => {
     wss.handleUpgrade(request, socket, head, socket => {
       wss.emit('connection', socket, request);
