@@ -7,6 +7,7 @@ const PLAYERSTATE = {
     TAKEHIT: 4
 };
 
+
 class FighterSprite {
     constructor(playerName) {
         this.playerName = playerName;
@@ -18,13 +19,18 @@ class FighterSprite {
         this.spriteData = spritesheetData[this.playerName];
         this.animations = [];
 
+        this.frameWidth;
+        this.frameHeight;
         
     }
 
     init() {
         for (let i = 0; i < this.spriteData.length; i++) {
             let img = loadImage(this.spriteData[i]["spritesheet"])
+            this.frameHeight = img.height;
+            this.frameWidth = img.width;
             this.animations.push(img);
+
         }
                 
     }
@@ -57,9 +63,13 @@ class FighterSprite {
 
     }
 
+    takehit() {
+        this.state = PLAYERSTATE.TAKEHIT;
+    }
+
+    
+
     draw() {
-        
-       
        
        this.animations[this.state].play();
 

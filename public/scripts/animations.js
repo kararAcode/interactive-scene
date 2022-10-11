@@ -28,6 +28,12 @@ let spritesheetData = {
             "spritesheet":"/assets/Martial Hero/Sprites/takehit.gif",
             "frames": 4,
             "fps": 4
+        },
+
+        {
+            "spritesheet":"/assets/Martial Hero/Sprites/jump.gif",
+            "frames": 4,
+            "fps": 4
         }
 
     ],
@@ -127,7 +133,13 @@ let spritesheetData = {
             "spritesheet":"/assets/Wizard Pack/Sprites/takehit.gif",
             "frames": 4,
             "fps": 4
-        }
+        },
+
+        // {
+        //     "spritesheet":"/assets/Wizard Pack/Sprites/jump.gif",
+        //     "frames": 4,
+        //     "fps": 4
+        // }
 
     ],
 

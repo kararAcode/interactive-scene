@@ -16,33 +16,43 @@ app.get("/", (req, res) => {
 
 wss.on("connection", (socket) => {
 
-    // socket.on("message", (msg) => {
-    //     wss.clients.forEach((sock) => {
-    //         if (sock !== socket) {
-    //             sock.send(msg.toString());
-    //         }
-    //     });
+    socket.on("message", (msg) => {
+        wss.clients.forEach((sock) => {
+            if (sock !== socket) {
+                sock.send(msg.toString());
+            }
+        });
 
-    // });
+    });
 
-    // if (wss.clients.size === 2) {
-    //     let i = 0;
+    if (wss.clients.size === 2) {
+        let i = 0;
         
-    //     let positions = [{x:0, y:50}, {x:350, y:50}];
+        let playerData = [["Martial Hero", {xFactor:0.125, yFactor:0.75}], ["Wizard Pack", {xFactor:0.75, y:0.75}]];
         
-    //     wss.clients.forEach((sock) => {
+        wss.clients.forEach((sock) => {
           
-    //         sock.send(JSON.stringify({
-    //             messageType: "setting-position",
-    //             data: {
-    //                 yourPos: positions[i],
-    //                 otherPos: positions[Number(!i)]
-    //             }
-    //         }));
+            sock.send(JSON.stringify({
+                messageType: "setting-position",
+                data: {
+                    player1Data: {
+                        pos: playerData[i][1],
+                        playerName: playerData[i][0],
+                        reversed: Boolean(i)
+                    },
 
-    //         i++;
-    //     });
-    // }
+                    
+                    player2Data: {
+                        pos: playerData[Number(!i)][1],
+                        playerName: playerData[Number(!i)][0],
+                        reversed: !i
+                    } 
+                }               
+            }));
+
+            i++;
+        });
+    }
 
 
 });
