@@ -3,7 +3,15 @@ const ws = require("ws");
 
 const app = express();
 
-const wss = new ws.Server({noServer: true})
+
+const server = app.listen(process.env.PORT || 8080)
+server.on('upgrade', (request, socket, head) => {
+    wss.handleUpgrade(request, socket, head, socket => {
+      wss.emit('connection', socket, request);
+    });
+});
+
+const wss = new ws.Server({server: server})
 
 app.set("view engine",  "ejs");
 app.use(express.static(__dirname + "/public"));
@@ -11,6 +19,8 @@ app.use(express.static(__dirname + "/public"));
 app.get("/", (req, res) => {
     res.render("index");
 });
+
+
 
 
 
@@ -55,11 +65,4 @@ wss.on("connection", (socket) => {
     }
 
 
-});
-
-const server = app.listen(process.env.PORT || 8080)
-server.on('upgrade', (request, socket, head) => {
-    wss.handleUpgrade(request, socket, head, socket => {
-      wss.emit('connection', socket, request);
-    });
 });
