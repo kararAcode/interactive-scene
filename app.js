@@ -13,7 +13,6 @@ app.get("/", (req, res) => {
 });
 
 
-
 wss.on("connection", (socket) => {
 
     socket.on("message", (msg) => {

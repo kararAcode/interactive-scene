@@ -4,7 +4,8 @@ const PLAYERSTATE = {
     ATTACK1: 1,
     ATTACK2: 2,
     RUN: 3,
-    TAKEHIT: 4
+    TAKEHIT: 4,
+    DEATH: 5
 };
 
 
@@ -21,6 +22,7 @@ class FighterSprite {
 
         this.frameWidth;
         this.frameHeight;
+        this.lastTime = 0;
         
     }
 
@@ -30,7 +32,6 @@ class FighterSprite {
             this.frameHeight = img.height;
             this.frameWidth = img.width;
             this.animations.push(img);
-
         }
                 
     }
@@ -41,7 +42,6 @@ class FighterSprite {
 
         this.reversed = false;
 
-        
     }
 
     moveBackward() {
@@ -67,11 +67,19 @@ class FighterSprite {
         this.state = PLAYERSTATE.TAKEHIT;
     }
 
-    
+    death() {
+        fighter1.health = 0;
+        this.state = PLAYERSTATE.DEATH;
+    }
 
     draw() {
        
-       this.animations[this.state].play();
+
+       if (this.lastTime !== -1 && this.state !== PLAYERSTATE.DEATH) {
+        this.animations[this.state].play();
+
+       }
+       
 
        if (this.reversed) {
             push()
@@ -85,8 +93,34 @@ class FighterSprite {
         }
 
 
+        if (this.state === PLAYERSTATE.TAKEHIT) {
 
-       this.state = PLAYERSTATE.IDLE;
+            this.takehit();
+            this.lastTime++;
+            
+            if (this.lastTime >= 120) {
+                this.state = PLAYERSTATE.IDLE;
+                this.lastTime = 0;
+            }
+            
+        }
+
+        if (this.state === PLAYERSTATE.DEATH) {
+
+            this.death();
+            this.lastTime++;
+            
+            if (this.lastTime >= 120) {
+                this.animations[this.state].pause();
+                this.lastTime = -1;
+            }
+            
+        }
+
+        else if (this.state !== PLAYERSTATE.TAKEHIT) {
+            this.state = PLAYERSTATE.IDLE;
+        }
+
     }
 
     

@@ -1,28 +1,30 @@
 
 let fighter1;
 let fighter2;
+let state;
 
 let bg;
 new p5();
 
-
+let music;
 
 
 function preload() {
-    
+    soundFormats('mp3', 'ogg');
     bg = loadImage("/assets/Free Pixel Art Forest/Preview/Background.png"); //loads background
+    music = loadSound('assets/treachery');
 
-    // fighter1 = new FighterSprite("Martial Hero");
-    // fighter1.init();
-    // fighter2 = new FighterSprite("Wizard Pack");
-    // fighter2.init();
 
-    
-   
 }
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
+
+    music.play();
+    music.jump(35);
+    userStartAudio();
+    
+    
 }
 
 
@@ -31,50 +33,39 @@ function draw() {
 
     background(bg);
 
-    inputHandler(fighter1);
+    if (fighter2.state !== PLAYERSTATE.DEATH && fighter1.state !== PLAYERSTATE.DEATH) {
+        new InputHandler(fighter1);
+    }
+
+    textSize(14);
+    fill("red");
+    strokeWeight(10);
+
+
+    text(`${fighter1.health}/100`, fighter1.position.x + 75, fighter1.position.y+50)
     fighter1.draw();
+    text(`${fighter2.health}/100`, fighter2.position.x +75, fighter2.position.y+50)
     fighter2.draw();
 
-
-    // let hit = collideRectRect(fighter1.position.x, fighter1.position.y, fighter1.frameWidth, fighter1.frameHeight, 
-    //     fighter2.position.x, fighter2.position.y, fighter2.frameWidth, fighter2.frameHeight);
-    // console.log(hit);
-
-    // if (hit && fighter1.state === PLAYERSTATE.ATTACK1){
-    //     fighter1.takehit();
-    // }
+}
 
 
+function checkForCollision() {
+    let hit = collideRectRect(fighter1.position.x, fighter1.position.y, 200, 200, 
+        fighter2.position.x, fighter2.position.y, 200, 200);
+
+
+    return hit;
+}
+
+
+function startScreen() {
 
 }
 
 
 
-
-
-function inputHandler(fighter) {
-    if (keyIsDown(65)) {
-        fighter.moveBackward(); 
-        sendPosition(fighter.position.x, fighter.position.y, fighter.state, fighter.reversed);
-    }
-
-    if (keyIsDown(68)) {
-        fighter.moveForward();
-        sendPosition(fighter.position.x, fighter.position.y, fighter.state, fighter.reversed);
-    }
-
-    if (keyIsDown(74)) {
-        fighter.attack1();
-        sendPosition(fighter.position.x, fighter.position.y, fighter.state, fighter.reversed);
-    }
-
-    if (keyIsDown(75)) {
-        fighter.attack2();
-        sendPosition(fighter.position.x, fighter.position.y, fighter.state, fighter.reversed);
-    }
-}
-
-const socket = new WebSocket('ws://interactive-scene.herokuapp.com');
+const socket = new WebSocket('ws://localhost:8080');
 
 socket.addEventListener("open", (e) => {
     // socket.send("Hello Server");
@@ -113,25 +104,53 @@ socket.addEventListener("message", (e) => {
         
         if (msg.state === PLAYERSTATE.ATTACK1) {
             fighter2.attack1();
+             
+            if (checkForCollision()) {
+                fighter1.health -= 1;
+                // fighter1.health = Math.floor(fighter1.health);
+                fighter1.takehit();
+                sendPosition(fighter1.position.x, fighter1.position.y, fighter1.state, fighter1.reversed);
+
+                if (fighter1.health <= 0) {
+                    fighter1.death();
+                    sendPosition(fighter1.position.x, fighter1.position.y, fighter1.state, fighter1.reversed);
+                }
+            }
         } 
 
         if (msg.state === PLAYERSTATE.ATTACK2) {
             fighter2.attack2();
+
+            if (checkForCollision()) {
+                fighter1.health -= 1;
+                // fighter1.health = Math.floor(fighter1.health);
+                fighter1.takehit();
+                sendPosition(fighter1.position.x, fighter1.position.y, fighter1.state, fighter1.reversed);
+
+                if (fighter1.health <= 0) {
+                    fighter1.death();
+                    sendPosition(fighter1.position.x, fighter1.position.y, fighter1.state, fighter1.reversed);
+                }
+            }
             
         } 
 
         if (msg.state === PLAYERSTATE.TAKEHIT) {
             fighter2.takehit();
+            fighter2.health -= 1;
+            // fighter2.health = Math.floor(fighter2.health);
 
-        } 
-    }
+        }
+
+        if (msg.state === PLAYERSTATE.DEATH) {
+            fighter2.death()
+        }
     
-
+    }
 });
 
 function sendPosition(x, y, state, reversed) {
     socket.send(JSON.stringify({x, y, state, reversed}));
-
 }
 
 
