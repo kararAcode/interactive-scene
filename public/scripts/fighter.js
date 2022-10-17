@@ -1,4 +1,6 @@
 
+// an object containing possible states
+// the numbers map to their index in the this.spriteData array
 const PLAYERSTATE = {
     IDLE: 0,
     ATTACK1: 1,
@@ -17,20 +19,18 @@ class FighterSprite {
         this.health = 100;
         this.state = PLAYERSTATE.IDLE;
         this.reversed;
-        this.spriteData = spritesheetData[this.playerName];
+        this.spriteData = spritesheetData[this.playerName]; // array of urls for player chosen, spritesheetData refrenced in animations.js
         this.animations = [];
 
-        this.frameWidth;
-        this.frameHeight;
+        
         this.lastTime = 0;
         
     }
 
     init() {
+        // loads all gifs for animations
         for (let i = 0; i < this.spriteData.length; i++) {
             let img = loadImage(this.spriteData[i]["spritesheet"])
-            this.frameHeight = img.height;
-            this.frameWidth = img.width;
             this.animations.push(img);
         }
                 
@@ -40,7 +40,7 @@ class FighterSprite {
         this.position.x += this.runningSpeed
         this.state = PLAYERSTATE.RUN;
 
-        this.reversed = false;
+        this.reversed = false; //whenever this function is called you turn to the right
 
     }
 
@@ -48,7 +48,7 @@ class FighterSprite {
         this.position.x -= this.runningSpeed
         this.state = PLAYERSTATE.RUN;
 
-        this.reversed = true;
+        this.reversed = true; //whenever this function is called you turn to the left
 
         
     }
@@ -68,12 +68,12 @@ class FighterSprite {
     }
 
     death() {
-        fighter1.health = 0;
+        fighter1.health = 0; // this sets health to 0 since the health sometimes goes below
         this.state = PLAYERSTATE.DEATH;
     }
 
     draw() {
-       
+       // this function draws fighter depending on current state
 
        if (this.lastTime !== -1 && this.state !== PLAYERSTATE.DEATH) {
         this.animations[this.state].play();
@@ -98,8 +98,8 @@ class FighterSprite {
             this.takehit();
             this.lastTime++;
             
-            if (this.lastTime >= 120) {
-                this.state = PLAYERSTATE.IDLE;
+            if (this.lastTime >= 120) { //this makes sure that the animation is played fully | 120 is used since this animation is 
+                this.state = PLAYERSTATE.IDLE; // 2 sec and the draw loop is called 60 times a sec
                 this.lastTime = 0;
             }
             
@@ -111,17 +111,17 @@ class FighterSprite {
             this.lastTime++;
             
             if (this.lastTime >= 120) {
-                this.animations[this.state].pause();
-                this.lastTime = -1;
+                this.animations[this.state].pause(); // when you die the animation stops
+                this.lastTime = -1; // prevents fighter from be redrawn
             }
             
         }
 
         else if (this.state !== PLAYERSTATE.TAKEHIT) {
-            this.state = PLAYERSTATE.IDLE;
+            this.state = PLAYERSTATE.IDLE; // defaults to idle whenever you are not in any other state
+            // with the exception of takehit 
         }
 
     }
-
     
 }

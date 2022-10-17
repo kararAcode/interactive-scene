@@ -1,51 +1,56 @@
+//  Karar Al-Shanoon
+//  Interactive-Scence Assignment
+// My extra for experts is the use of WebSockets and music
 
-let fighter1;
-let fighter2;
-let state;
+// fighter variables
+let fighter1; // The fighter that you are controlling
+let fighter2; // The fighter that the other user is controlling
+let gameState = "start"; 
 
 let bg;
-new p5();
+new p5(); // to prevent errors from coming up since p5 functions are used in classes
 
-let music;
+let gameMusic;
+let menuMusic
+let btn;
+
+let socket;
 
 
 function preload() {
     soundFormats('mp3', 'ogg');
     bg = loadImage("/assets/Free Pixel Art Forest/Preview/Background.png"); //loads background
-    music = loadSound('assets/treachery');
-
+    gameMusic = loadSound('assets/treachery'); // fighting music
+    menuMusic = loadSound('assets/numberone'); // start and loadingscreen music
 
 }
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
 
-    music.play();
-    music.jump(35);
-    userStartAudio();
-    
-    
+    btn = new Button(windowWidth/2-100, windowHeight/2-50, 200, 100, "red", "Join Game"); // creates button for start screen
+
+    menuMusic.play(); //menu music starts playing
+    userStartAudio(); // starts audio on  any user input
 }
 
 
 
 function draw() {
+    // displays screen depending on gamestate
 
-    background(bg);
-
-    if (fighter2.state !== PLAYERSTATE.DEATH && fighter1.state !== PLAYERSTATE.DEATH) {
-        new InputHandler(fighter1);
+    if (gameState === "start") {
+        startScreen();
     }
 
-    textSize(14);
-    fill("red");
-    strokeWeight(10);
+    if (gameState === "loading") {
 
+        loadingScreen();
+    }
 
-    text(`${fighter1.health}/100`, fighter1.position.x + 75, fighter1.position.y+50)
-    fighter1.draw();
-    text(`${fighter2.health}/100`, fighter2.position.x +75, fighter2.position.y+50)
-    fighter2.draw();
+    if (gameState === "main") {
+        main();
+    }
 
 }
 
@@ -61,96 +66,122 @@ function checkForCollision() {
 
 function startScreen() {
 
+    btn.display();
+    btn.onClick(() => { // when the button is clicked, loading screen shows
+        clear();
+        gameState = "loading";
+        socket = new WebSocket('ws://192.168.232.147:8080'); // connects to socket server
+        socketInit(); // initalizes socket event listeners
+    });
+}
+
+function loadingScreen() {
+    textSize(50);
+    fill("black");
+    textAlign(CENTER);    // centers text
+    text("WAITING FOR PLAYER TO JOIN...", windowWidth/2, windowHeight/2);
+}
+
+function main() {
+    background(bg);
+
+    if (fighter2.state !== PLAYERSTATE.DEATH && fighter1.state !== PLAYERSTATE.DEATH) {
+        new InputHandler(fighter1); //input only works when both players are alive
+        textSize(14);
+        fill("red");
+        strokeWeight(10);
+        text(`${Math.round(fighter1.health)}/100`, fighter1.position.x + 75, fighter1.position.y+50) // fighter1 health
+        text(`${Math.round(fighter2.health)}/100`, fighter2.position.x + 75, fighter2.position.y+50) // fighter2 health
+
+    }
+
+    // draws fighters
+    fighter1.draw();
+    fighter2.draw();
 }
 
 
 
-const socket = new WebSocket('ws://localhost:8080');
+function socketInit() {
+    // 
+    socket.addEventListener("message", (e) => {
+        let msg = JSON.parse(e.data);
+    
+        if (msg.messageType === "start-game") {
+            // this sets the fighter data once another player joins a game
+            fighter1 = new FighterSprite(msg.data.player1Data.playerName);
+            fighter1.init();
+            fighter1.position.x = msg.data.player1Data.pos.xFactor * windowWidth;
+            fighter1.reversed = msg.data.player1Data.reversed;
+    
+            fighter2 = new FighterSprite(msg.data.player2Data.playerName);
+            fighter2.init();
+            fighter2.position.x = msg.data.player2Data.pos.xFactor * windowWidth;
+            fighter2.reversed = msg.data.player2Data.reversed;
+    
+            gameState = "main";  //switches to actual fighting game
+            menuMusic.stop();
 
-socket.addEventListener("open", (e) => {
-    // socket.send("Hello Server");
-});
-
-socket.addEventListener("message", (e) => {
-    let msg = JSON.parse(e.data);
-
-    if (msg.messageType === "setting-position") {
-        console.log(msg)
-        fighter1 = new FighterSprite(msg.data.player1Data.playerName);
-        fighter1.init();
-        fighter1.position.x = msg.data.player1Data.pos.xFactor * windowWidth;
-        // fighter1.postiion.y = msg.data.player1Data.pos.yFactor * windowHeight;
-        fighter1.reversed = msg.data.player1Data.reversed;
-
-        fighter2 = new FighterSprite(msg.data.player2Data.playerName);
-        fighter2.init();
-        fighter2.position.x = msg.data.player2Data.pos.xFactor * windowWidth;
-        // fighter2.position.y = msg.data.player2Data.pos.yFactor * windowHeight;
-        fighter2.reversed = msg.data.player2Data.reversed;
-
-    }
-
-
-    else {
-        if (msg.state === PLAYERSTATE.RUN) {
-            if (msg.reversed) {
-                fighter2.moveBackward();
-            }
-
-            else {
-                fighter2.moveForward();
-            }
+            // music switches over
+            gameMusic.play();
+            gameMusic.jump(35);
+    
         }
-        
-        if (msg.state === PLAYERSTATE.ATTACK1) {
-            fighter2.attack1();
-             
-            if (checkForCollision()) {
-                fighter1.health -= 1;
-                // fighter1.health = Math.floor(fighter1.health);
-                fighter1.takehit();
-                sendPosition(fighter1.position.x, fighter1.position.y, fighter1.state, fighter1.reversed);
-
-                if (fighter1.health <= 0) {
-                    fighter1.death();
-                    sendPosition(fighter1.position.x, fighter1.position.y, fighter1.state, fighter1.reversed);
+    
+    
+        else {
+            // data is sent whenever changes happen from other player
+            // deals with data and changes data to match
+            if (msg.state === PLAYERSTATE.RUN) {
+                if (msg.reversed) {
+                    fighter2.moveBackward();
                 }
-            }
-        } 
-
-        if (msg.state === PLAYERSTATE.ATTACK2) {
-            fighter2.attack2();
-
-            if (checkForCollision()) {
-                fighter1.health -= 1;
-                // fighter1.health = Math.floor(fighter1.health);
-                fighter1.takehit();
-                sendPosition(fighter1.position.x, fighter1.position.y, fighter1.state, fighter1.reversed);
-
-                if (fighter1.health <= 0) {
-                    fighter1.death();
-                    sendPosition(fighter1.position.x, fighter1.position.y, fighter1.state, fighter1.reversed);
+    
+                else {
+                    fighter2.moveForward();
                 }
             }
             
-        } 
-
-        if (msg.state === PLAYERSTATE.TAKEHIT) {
-            fighter2.takehit();
-            fighter2.health -= 1;
-            // fighter2.health = Math.floor(fighter2.health);
-
-        }
-
-        if (msg.state === PLAYERSTATE.DEATH) {
-            fighter2.death()
-        }
+            if (msg.state === PLAYERSTATE.ATTACK1) {
+                fighter2.attack1();
+                dealWithHit()
+            } 
     
-    }
-});
-
-function sendPosition(x, y, state, reversed) {
-    socket.send(JSON.stringify({x, y, state, reversed}));
+            if (msg.state === PLAYERSTATE.ATTACK2) {
+                fighter2.attack2();           
+                dealWithHit();
+                
+            } 
+    
+            if (msg.state === PLAYERSTATE.TAKEHIT) {
+                fighter2.takehit();
+                fighter2.health -= 0.3;
+    
+            }
+    
+            if (msg.state === PLAYERSTATE.DEATH) {
+                fighter2.death()
+            }
+        }
+    });
 }
 
+function dealWithHit() {
+    // checks whenever character is in range and is in attack state
+    if (checkForCollision()) {
+        fighter1.health -= 0.3;
+        fighter1.takehit();
+        sendPosition(fighter1.position.x, fighter1.position.y, fighter1.state, fighter1.reversed);
 
+        if (fighter1.health <= 0) {
+            // checks if player is dead
+            fighter1.death();
+            sendPosition(fighter1.position.x, fighter1.position.y, fighter1.state, fighter1.reversed);
+        }
+    }
+}
+
+function sendPosition(x, y, state, reversed) {
+    // sends position and state of fighter
+    socket.send(JSON.stringify({x, y, state, reversed}));
+}

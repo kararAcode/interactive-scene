@@ -1,3 +1,5 @@
+// spriteData
+
 let spritesheetData = {
     "Martial Hero": [
         {
