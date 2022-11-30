@@ -30,6 +30,14 @@ wss.on("connection", (socket) => {
 
     });
 
+    socket.on("close", () => {
+        let gameIndex = findGame(socket);
+        rooms[gameIndex].forEach((sock) => {
+            if (sock !== socket) {
+                sock.terminate();
+            }
+        });
+    });
 
     if (clients.length % 2 === 0) {
         setGame();

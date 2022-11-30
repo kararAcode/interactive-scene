@@ -1,6 +1,6 @@
 //  Karar Al-Shanoon
 //  Interactive-Scence Assignment
-// My extra for experts is the use of WebSockets and music
+//  My extra for experts is the use of WebSockets and music
 
 // fighter variables
 let fighter1; // The fighter that you are controlling
@@ -31,7 +31,7 @@ function setup() {
     btn = new Button(windowWidth/2-100, windowHeight/2-50, 200, 100, "red", "Join Game"); // creates button for start screen
 
     menuMusic.play(); //menu music starts playing
-    userStartAudio(); // starts audio on  any user input
+    userStartAudio(); // starts audio on any user input
 }
 
 
@@ -65,21 +65,23 @@ function checkForCollision() {
 
 
 function startScreen() {
+    background("black")
 
     btn.display();
     btn.onClick(() => { // when the button is clicked, loading screen shows
         clear();
         gameState = "loading";
-        socket = new WebSocket('ws://192.168.232.147:8080'); // connects to socket server
+        socket = new WebSocket('ws://localhost:8080'); // connects to socket server
         socketInit(); // initalizes socket event listeners
     });
 }
 
 function loadingScreen() {
+    background("black")
     textSize(50);
-    fill("black");
+    fill("white");
     textAlign(CENTER);    // centers text
-    text("WAITING FOR PLAYER TO JOIN...", windowWidth/2, windowHeight/2);
+    text("WAITING FOR PLAYER TO JOIN...", width/2, height/2);
 }
 
 function main() {
@@ -92,7 +94,6 @@ function main() {
         strokeWeight(10);
         text(`${Math.round(fighter1.health)}/100`, fighter1.position.x + 75, fighter1.position.y+50) // fighter1 health
         text(`${Math.round(fighter2.health)}/100`, fighter2.position.x + 75, fighter2.position.y+50) // fighter2 health
-
     }
 
     // draws fighters
@@ -118,7 +119,7 @@ function socketInit() {
             fighter2.init();
             fighter2.position.x = msg.data.player2Data.pos.xFactor * windowWidth;
             fighter2.reversed = msg.data.player2Data.reversed;
-    
+            
             gameState = "main";  //switches to actual fighting game
             menuMusic.stop();
 
@@ -163,6 +164,10 @@ function socketInit() {
                 fighter2.death()
             }
         }
+    });
+
+    socket.addEventListener("close", () => {
+        gameState = "start";
     });
 }
 
