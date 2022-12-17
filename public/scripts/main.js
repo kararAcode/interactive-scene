@@ -7,6 +7,12 @@ let fighter1; // The fighter that you are controlling
 let fighter2; // The fighter that the other user is controlling
 let gameState = "start"; 
 
+let animations = {
+    "Martial Hero": null,
+    "Wizard Pack": null,
+}
+
+
 let bg;
 new p5(); // to prevent errors from coming up since p5 functions are used in classes
 
@@ -15,6 +21,8 @@ let menuMusic
 let btn;
 
 let socket;
+let timeOffset;
+let time;
 
 
 function preload() {
@@ -22,6 +30,14 @@ function preload() {
     bg = loadImage("/assets/Free Pixel Art Forest/Preview/Background.png"); //loads background
     gameMusic = loadSound('assets/treachery'); // fighting music
     menuMusic = loadSound('assets/numberone'); // start and loadingscreen music
+
+    for (const name of Object.keys(animations)) {
+        let arr = [];
+        for (let i = 0; i < spritesheetData[name].length; i++) {
+            arr.push(loadImage(spritesheetData[name][i]["spritesheet"]));
+        }
+        animations[name] = arr;
+    }
 
 }
 
@@ -37,6 +53,8 @@ function setup() {
 
 
 function draw() {
+
+
     // displays screen depending on gamestate
 
     if (gameState === "start") {
@@ -107,16 +125,20 @@ function socketInit() {
     // 
     socket.addEventListener("message", (e) => {
         let msg = JSON.parse(e.data);
+
+       
     
         if (msg.messageType === "start-game") {
+            let fighter1Name = msg.data.player1Data.playerName
+            let fighter2Name = msg.data.player2Data.playerName
+
+
             // this sets the fighter data once another player joins a game
-            fighter1 = new FighterSprite(msg.data.player1Data.playerName);
-            fighter1.init();
+            fighter1 = new FighterSprite(fighter1Name, animations[fighter1Name]);
             fighter1.position.x = msg.data.player1Data.pos.xFactor * windowWidth;
             fighter1.reversed = msg.data.player1Data.reversed;
     
-            fighter2 = new FighterSprite(msg.data.player2Data.playerName);
-            fighter2.init();
+            fighter2 = new FighterSprite(fighter2Name, animations[fighter2Name]);
             fighter2.position.x = msg.data.player2Data.pos.xFactor * windowWidth;
             fighter2.reversed = msg.data.player2Data.reversed;
             
@@ -126,6 +148,8 @@ function socketInit() {
             // music switches over
             gameMusic.play();
             gameMusic.jump(35);
+
+            timeOffset = millis();
     
         }
     
@@ -133,6 +157,10 @@ function socketInit() {
         else {
             // data is sent whenever changes happen from other player
             // deals with data and changes data to match
+            if (msg.state === PLAYERSTATE.IDLE) {
+                fighter2.stop();
+            }
+
             if (msg.state === PLAYERSTATE.RUN) {
                 if (msg.reversed) {
                     fighter2.moveBackward();
@@ -190,3 +218,5 @@ function sendPosition(x, y, state, reversed) {
     // sends position and state of fighter
     socket.send(JSON.stringify({x, y, state, reversed}));
 }
+
+

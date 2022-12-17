@@ -4,6 +4,7 @@ const ws = require("ws");
 const app = express();
 
 const wss = new ws.Server({noServer: true}) // websocket server is created
+let time = 0;
 
 app.set("view engine",  "ejs");
 app.use(express.static(__dirname + "/public"));
@@ -21,6 +22,8 @@ wss.on("connection", (socket) => {
 
     clients.push(socket);
     socket.on("message", (msg) => {
+       
+
         let gameIndex = findGame(socket);
         rooms[gameIndex].forEach((sock) => {
             if (sock !== socket) {
@@ -53,8 +56,9 @@ server.on('upgrade', (request, socket, head) => {
 });
 
 function setGame() {
+    
+
     rooms.push([clients[clients.length-2], clients[clients.length-1]]);
-    console.log(clients[0]);
 
     // The needed data to start game is created when 2 clients are connected
     let i = 0; // i is used to keep track of which client in arr

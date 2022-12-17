@@ -3,43 +3,43 @@
 let spritesheetData = {
     "Martial Hero": [
         {
-            "spritesheet": "/assets/Martial Hero/Sprites/idle.gif",
+            "spritesheet": "/assets/Martial Hero/Sprites/Idle.png",
             "frames": 8,
             "fps": 8
         },
         
         {
-            "spritesheet":"/assets/Martial Hero/Sprites/attack1.gif",
+            "spritesheet":"/assets/Martial Hero/Sprites/Attack1.png",
             "frames": 6,
             "fps": 6
         },
     
         {
-            "spritesheet":"/assets/Martial Hero/Sprites/attack2.gif",
+            "spritesheet":"/assets/Martial Hero/Sprites/Attack2.png",
             "frames": 6,
             "fps": 6
         },
 
         {
-            "spritesheet":"/assets/Martial Hero/Sprites/run.gif",
+            "spritesheet":"/assets/Martial Hero/Sprites/Run.png",
             "frames": 8,
             "fps": 8
         },
 
         {
-            "spritesheet":"/assets/Martial Hero/Sprites/takehit.gif",
+            "spritesheet":"/assets/Martial Hero/Sprites/takehit2.png",
             "frames": 4,
             "fps": 4
         },
 
         {
-            "spritesheet":"/assets/Martial Hero/Sprites/death.gif",
+            "spritesheet":"/assets/Martial Hero/Sprites/Death.png",
             "frames": 4,
             "fps": 4
         },
 
         {
-            "spritesheet":"/assets/Martial Hero/Sprites/jump.gif",
+            "spritesheet":"/assets/Martial Hero/Sprites/Jump.png",
             "frames": 4,
             "fps": 4
         }
@@ -48,31 +48,31 @@ let spritesheetData = {
 
     "Martial Hero 2": [
         {
-            "spritesheet": "/assets/Martial Hero 2/Sprites/Idle.gif",
+            "spritesheet": "/assets/Martial Hero 2/Sprites/Idle.png",
             "frames": 4,
             "fps": 4
         },
         
         {
-            "spritesheet":"/assets/Martial Hero 2/Sprites/Attack1.gif",
+            "spritesheet":"/assets/Martial Hero 2/Sprites/Attack1.png",
             "frames": 4,
             "fps": 4
         },
     
         {
-            "spritesheet":"/assets/Martial Hero 2/Sprites/Attack2.gif",
+            "spritesheet":"/assets/Martial Hero 2/Sprites/Attack2.png",
             "frames": 4,
             "fps": 4
         },
 
         {
-            "spritesheet":"/assets/Martial Hero 2/Sprites/Run.gif",
+            "spritesheet":"/assets/Martial Hero 2/Sprites/Run.png",
             "frames": 8,
             "fps": 8
         },
 
         {
-            "spritesheet":"/assets/Martial Hero 2/Sprites/takehit.gif",
+            "spritesheet":"/assets/Martial Hero 2/Sprites/takehit.png",
             "frames": 4,
             "fps": 4
         }
@@ -114,43 +114,43 @@ let spritesheetData = {
 
     "Wizard Pack": [
         {
-            "spritesheet": "/assets/Wizard Pack/Sprites/idle.gif",
+            "spritesheet": "/assets/Wizard Pack/Sprites/Idle.png",
             "frames": 6,
             "fps": 6
         },
         
         {
-            "spritesheet":"/assets/Wizard Pack/Sprites/attack1.gif",
+            "spritesheet":"/assets/Wizard Pack/Sprites/Attack1.png",
             "frames": 8,
             "fps": 8
         },
     
         {
-            "spritesheet":"/assets/Wizard Pack/Sprites/attack2.gif",
+            "spritesheet":"/assets/Wizard Pack/Sprites/Attack2.png",
             "frames": 8,
             "fps": 8
         },
 
         {
-            "spritesheet":"/assets/Wizard Pack/Sprites/run.gif",
+            "spritesheet":"/assets/Wizard Pack/Sprites/Run.png",
             "frames": 8,
             "fps": 8
         },
 
         {
-            "spritesheet":"/assets/Wizard Pack/Sprites/takehit.gif",
+            "spritesheet":"/assets/Wizard Pack/Sprites/Hit.png",
             "frames": 4,
             "fps": 4
         },
 
         {
-            "spritesheet":"/assets/Wizard Pack/Sprites/death.gif",
+            "spritesheet":"/assets/Wizard Pack/Sprites/Death.png",
             "frames": 4,
             "fps": 4
         },
 
         // {
-        //     "spritesheet":"/assets/Wizard Pack/Sprites/jump.gif",
+        //     "spritesheet":"/assets/Wizard Pack/Sprites/jump.png",
         //     "frames": 4,
         //     "fps": 4
         // }
