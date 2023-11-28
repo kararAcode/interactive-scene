@@ -44,7 +44,7 @@ function preload() {
 function setup() {
     createCanvas(windowWidth, windowHeight);
 
-    btn = new Button(windowWidth/2-100, windowHeight/2-50, 200, 100, "red", "Join Game"); // creates button for start screen
+    btn = new Button(width/2-100, height/2-50, 200, 100, "red", "Join Game"); // creates button for start screen
 
     menuMusic.play(); //menu music starts playing
     userStartAudio(); // starts audio on any user input
@@ -89,7 +89,7 @@ function startScreen() {
     btn.onClick(() => { // when the button is clicked, loading screen shows
         clear();
         gameState = "loading";
-        socket = new WebSocket('ws://localhost:8080'); // connects to socket server
+        socket = new WebSocket('ws://localhost:5500'); // connects to socket server
         socketInit(); // initalizes socket event listeners
     });
 }
@@ -106,7 +106,6 @@ function main() {
     background(bg);
 
     if (fighter2.state !== PLAYERSTATE.DEATH && fighter1.state !== PLAYERSTATE.DEATH) {
-        new InputHandler(fighter1); //input only works when both players are alive
         textSize(14);
         fill("red");
         strokeWeight(10);
@@ -115,8 +114,13 @@ function main() {
     }
 
     // draws fighters
+    
+
     fighter1.draw();
     fighter2.draw();
+
+    fighter1.update();
+    fighter2.update();
 }
 
 
@@ -137,6 +141,8 @@ function socketInit() {
             fighter1 = new FighterSprite(fighter1Name, animations[fighter1Name]);
             fighter1.position.x = msg.data.player1Data.pos.xFactor * windowWidth;
             fighter1.reversed = msg.data.player1Data.reversed;
+            new InputHandler(fighter1); //input only works when both players are alive
+
     
             fighter2 = new FighterSprite(fighter2Name, animations[fighter2Name]);
             fighter2.position.x = msg.data.player2Data.pos.xFactor * windowWidth;
@@ -157,8 +163,18 @@ function socketInit() {
         else {
             // data is sent whenever changes happen from other player
             // deals with data and changes data to match
+
+            
+            
             if (msg.state === PLAYERSTATE.IDLE) {
-                fighter2.stop();
+                if (fighter2.velocity.x !== 0) {
+                    fighter2.stop();
+
+                }
+
+                else {
+                    fighter2.state = PLAYERSTATE.IDLE;
+                }
             }
 
             if (msg.state === PLAYERSTATE.RUN) {
@@ -191,6 +207,8 @@ function socketInit() {
             if (msg.state === PLAYERSTATE.DEATH) {
                 fighter2.death()
             }
+
+
         }
     });
 
@@ -220,3 +238,6 @@ function sendPosition(x, y, state, reversed) {
 }
 
 
+window.addEventListener("resize", () => {
+    setup();
+})

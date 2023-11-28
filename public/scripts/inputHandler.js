@@ -1,37 +1,101 @@
+let lastKey = "";
+
+
 class InputHandler {
     constructor(fighter) {
 
-        if (keyIsDown(65) && fighter.position.x >= -70) { //moves backwards whenever A is pressed and in boundries
-            fighter.moveBackward(); 
-            sendPosition(fighter.position.x, fighter.position.y, fighter.state, fighter.reversed); //sends state to other socket
+        fighter.keys = {
+            a: {
+                pressed: false
+            },
+        
+            d: {
+                pressed: false
+            },
+        
+            w: {
+                pressed: false
+            },
+        
+            s: {
+                pressed: false
+            },
+        
+            j: {
+                pressed: false
+            },
+        
+            k: {
+                pressed: false
+            }
+        
+        
+            
+        
+        
         }
-    
-        if (keyIsDown(68) && fighter.position.x <= windowWidth - 150) {//moves forward whenever D is pressed and in boundries
-            fighter.moveForward();
-            sendPosition(fighter.position.x, fighter.position.y, fighter.state, fighter.reversed);
-        }
-    
-        if (keyIsDown(74)) { // whenever J is presseed attack1 is executed
-            fighter.attack1();
-            sendPosition(fighter.position.x, fighter.position.y, fighter.state, fighter.reversed);
-        }
-    
-        if (keyIsDown(75)) { // whenever K is presseed attack2 is executed
-            fighter.attack2();
-            sendPosition(fighter.position.x, fighter.position.y, fighter.state, fighter.reversed);
-        }
+        document.addEventListener("keydown", (e) => {
+            switch (e.key) {
+                case "a":
+                    fighter.keys.a.pressed = true;
+                    lastKey = "a";
+                    break;
+
+                case "w":
+                    fighter.velocity.y = -10;
+                    break;
+
+                case "s":
+                    fighter.keys.s.pressed = true;
+                    lastKey = "s";
+                    break;
+
+                case "d":
+                    fighter.keys.d.pressed = true;
+                    lastKey = "d";
+                    break;
+
+                case "j":
+                    fighter.keys.j.pressed = true;
+                    lastKey = "j";
+                    break;
+
+                case "k":
+                    fighter.keys.k.pressed = true;
+                    lastKey = "k";
+                    break;
+                    
+            }
+        })
 
         document.addEventListener("keyup", (e) => {
-            if (e.key === "d") {
-                fighter.stop();
-                sendPosition(fighter.position.x, fighter.position.y, fighter.state, fighter.reversed);
+            switch (e.key) {
+                case "a":
+                    fighter.keys.a.pressed = false;
+                    
+                    break;
 
-            }
+                case "w":
+                    fighter.keys.w.pressed = false;
+                    break;
 
-            if (e.key === "a") {
-                fighter.stop();
-                sendPosition(fighter.position.x, fighter.position.y, fighter.state, fighter.reversed);
+                case "s":
+                    fighter.keys.s.pressed = false;
+                    break;
 
+                case "d":
+                    fighter.keys.d.pressed = false;
+                    
+                    break;
+
+                case "j":
+                    fighter.keys.j.pressed = false;
+                    break;
+
+                case "k":
+                    fighter.keys.k.pressed = false;
+                    break;
+                    
             }
         });
 

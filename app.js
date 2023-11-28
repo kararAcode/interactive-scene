@@ -48,7 +48,7 @@ wss.on("connection", (socket) => {
 });
 
 // ws server is shared with http server
-const server = app.listen(process.env.PORT || 8080)
+const server = app.listen(process.env.PORT || 5500)
 server.on('upgrade', (request, socket, head) => {
     wss.handleUpgrade(request, socket, head, socket => {
       wss.emit('connection', socket, request);
